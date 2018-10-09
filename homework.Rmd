@@ -106,8 +106,10 @@ a<-my_gap %>%
 my_gap
 spread(a,country,year)
   
-
 ```
+Output:
+
+Reshaped the data.
 
 ## Activity #5 
 
