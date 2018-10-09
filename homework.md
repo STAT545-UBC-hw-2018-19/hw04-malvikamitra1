@@ -18,6 +18,7 @@ suppressPackageStartupMessages(library(gapminder))
 
 ``` r
 library(knitr)
+library(dplyr)
 ```
 
 # DATA RESHAPING:
@@ -307,6 +308,98 @@ spread(a,country,year)
     ## # A tibble: 0 x 1
     ## # ... with 1 variable: lifeExp <dbl>
 
+## Activity \#5
+
+Previous TA Andrew MacDonald has a nice data manipulation sampler. Make
+up a similar set of exercises for yourself, in the abstract or (even
+better) using Gapminder or other data, and solve them.
+
+Creating my dataframe
+
+``` r
+A <- data.frame(
+       x1 = c('A', 'A','A', 'B', 'B'),
+       x2 = c('a', 'b', 'b', 'c', 'd'),
+       x3 = c(1, 1, 1, 2, 2))
+A
+```
+
+    ##   x1 x2 x3
+    ## 1  A  a  1
+    ## 2  A  b  1
+    ## 3  A  b  1
+    ## 4  B  c  2
+    ## 5  B  d  2
+
+GROUP
+
+``` r
+B<-A %>% 
+  group_by(x1,x2) %>% 
+  summarize(Nrows=n(),
+            mean=mean(x3))
+B
+```
+
+    ## # A tibble: 4 x 4
+    ## # Groups:   x1 [?]
+    ##   x1    x2    Nrows  mean
+    ##   <fct> <fct> <int> <dbl>
+    ## 1 A     a         1     1
+    ## 2 A     b         2     1
+    ## 3 B     c         1     2
+    ## 4 B     d         1     2
+
+Output:
+
+Created a dataframe B and grouped by columns x1 and x2. the Nrows
+coulmns shows the count of the rows under the corresponding values of x1
+and x2.Example A of x1 has a corresponding value of a in just one row of
+x2 so Nrows value is 1 for this entrie and mean column just calulates
+the mean of x3 values corresponding to x1 values.
+
+SUBSET
+
+subset Table A to give C:
+
+``` r
+C<-filter(A,x1=="A")
+C
+```
+
+    ##   x1 x2 x3
+    ## 1  A  a  1
+    ## 2  A  b  1
+    ## 3  A  b  1
+
+TRANSPOSE
+
+transpose C to give:
+
+``` r
+C_transpose <- data.frame(t(C))
+C_transpose
+```
+
+    ##    X1 X2 X3
+    ## x1  A  A  A
+    ## x2  a  b  b
+    ## x3  1  1  1
+
+SORT
+
+``` r
+A_arranged <- arrange(A,x1,x2,x3)
+A_arranged
+```
+
+    ##   x1 x2 x3
+    ## 1  A  a  1
+    ## 2  A  b  1
+    ## 3  A  b  1
+    ## 4  B  c  2
+    ## 5  B  d  2
+
 # Join Prompts
 
 Join Prompts are used to combine datasets in R, using various functions
@@ -413,8 +506,9 @@ full_join(gap,cont)
     ## 4 Afghanistan  1967    34.0  836.
     ## 5 Afghanistan  1972    36.1  740.
 
-Output: left\_join: Returns all rows of gap, and all columns of gap and
-cont.
+Output:
+
+left\_join: Returns all rows of gap, and all columns of gap and cont.
 
 inner\_join:Return all rows of gap where there are matching values in
 cont, and all columns of gap and cont.
@@ -453,7 +547,7 @@ pet<- data.frame(
     life=c(10,2,9)
     )
   
-pet
+pet 
 ```
 
     ##   name   type      nature
