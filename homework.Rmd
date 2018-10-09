@@ -64,9 +64,19 @@ Is there a plot that is easier to make with the data in this shape versis the us
 k<-gapminder %>% 
    group_by(year,continent) %>% 
   summarise(medianLE=median(lifeExp))
- 
-k
-spread(k,key="continent",value="year")
+
+knitr::kable(k)
+
+ggplot(k,aes(continent,medianLE))+
+  geom_point()
+
+n<-spread(k,key="continent",value="year")
+n
+ggplot(n,aes(Africa,medianLE))+
+  geom_point()
+
+ggplot(n,aes(Asia,medianLE))+
+  geom_point()
 ```
 Output:
 
@@ -75,6 +85,8 @@ Grouped by continent and year.
 Used the summarise() fn to calculate the median lifeExp.
 
 Used spread() fn to spread the data continent wise according to the year.
+
+I dont think its easier because we will have to make separate plots for each continent versus earlier we had one plot with all the continents and their respective medianLF plotted on it.
 
 ## Activity #4
 
@@ -196,7 +208,7 @@ We lose parrot in the join because, although he appears in  pet, but does not ap
 semi_join(pet,animal):
 
 ```{r}
-semi_join(pet,animal)
+semi_join(pet,animal) 
 ```
 Output:
 
@@ -275,3 +287,49 @@ Output:
  
 We get all variables from pet AND all variables from animal. Any row that derives solely from one table or the other carries NAs in the variables found only in the other table.
  
+```{r}
+animal2<-data.frame(
+    type=c("tiger","bird","lion"),
+    life=c(10,5,9)
+    )
+```
+
+left_joint(pet,animal2):
+
+```{r}
+left_join(pet,animal2)
+```
+Output:
+
+Joins matching rows from animal2 to pet.
+
+Since the type column values dont match and the life times of a dog, parrot and cat are not defined in the type column of animal2 thats why after joining the two datasets the joined life column gives NAs.
+
+inner_join(pet,animal2):
+
+```{r}
+inner_join(pet,animal2)
+```
+Output:
+
+Joins data. Retains only rows common in both sets.
+Since there are no common rows so it returns 0 rows in the result.
+
+anti_join():
+
+```{r}
+anti_join(pet,animal2)
+```
+Output:
+
+Returns all rows in pet that do not have a match in animal.
+
+
+full_join(pet,animal2):
+
+```{r}
+full_join(pet,animal2)
+```
+Output:
+
+Joins the data from both the dataframes.Retains all values,all rows from both.

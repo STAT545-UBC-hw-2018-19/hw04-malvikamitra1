@@ -136,28 +136,83 @@ versis the usual form? If so (or you think so), try it\! Reflect.
 k<-gapminder %>% 
    group_by(year,continent) %>% 
   summarise(medianLE=median(lifeExp))
- 
-k
+
+knitr::kable(k)
 ```
 
-    ## # A tibble: 60 x 3
-    ## # Groups:   year [?]
-    ##     year continent medianLE
-    ##    <int> <fct>        <dbl>
-    ##  1  1952 Africa        38.8
-    ##  2  1952 Americas      54.7
-    ##  3  1952 Asia          44.9
-    ##  4  1952 Europe        65.9
-    ##  5  1952 Oceania       69.3
-    ##  6  1957 Africa        40.6
-    ##  7  1957 Americas      56.1
-    ##  8  1957 Asia          48.3
-    ##  9  1957 Europe        67.6
-    ## 10  1957 Oceania       70.3
-    ## # ... with 50 more rows
+| year | continent | medianLE |
+| ---: | :-------- | -------: |
+| 1952 | Africa    |  38.8330 |
+| 1952 | Americas  |  54.7450 |
+| 1952 | Asia      |  44.8690 |
+| 1952 | Europe    |  65.9000 |
+| 1952 | Oceania   |  69.2550 |
+| 1957 | Africa    |  40.5925 |
+| 1957 | Americas  |  56.0740 |
+| 1957 | Asia      |  48.2840 |
+| 1957 | Europe    |  67.6500 |
+| 1957 | Oceania   |  70.2950 |
+| 1962 | Africa    |  42.6305 |
+| 1962 | Americas  |  58.2990 |
+| 1962 | Asia      |  49.3250 |
+| 1962 | Europe    |  69.5250 |
+| 1962 | Oceania   |  71.0850 |
+| 1967 | Africa    |  44.6985 |
+| 1967 | Americas  |  60.5230 |
+| 1967 | Asia      |  53.6550 |
+| 1967 | Europe    |  70.6100 |
+| 1967 | Oceania   |  71.3100 |
+| 1972 | Africa    |  47.0315 |
+| 1972 | Americas  |  63.4410 |
+| 1972 | Asia      |  56.9500 |
+| 1972 | Europe    |  70.8850 |
+| 1972 | Oceania   |  71.9100 |
+| 1977 | Africa    |  49.2725 |
+| 1977 | Americas  |  66.3530 |
+| 1977 | Asia      |  60.7650 |
+| 1977 | Europe    |  72.3350 |
+| 1977 | Oceania   |  72.8550 |
+| 1982 | Africa    |  50.7560 |
+| 1982 | Americas  |  67.4050 |
+| 1982 | Asia      |  63.7390 |
+| 1982 | Europe    |  73.4900 |
+| 1982 | Oceania   |  74.2900 |
+| 1987 | Africa    |  51.6395 |
+| 1987 | Americas  |  69.4980 |
+| 1987 | Asia      |  66.2950 |
+| 1987 | Europe    |  74.8150 |
+| 1987 | Oceania   |  75.3200 |
+| 1992 | Africa    |  52.4290 |
+| 1992 | Americas  |  69.8620 |
+| 1992 | Asia      |  68.6900 |
+| 1992 | Europe    |  75.4510 |
+| 1992 | Oceania   |  76.9450 |
+| 1997 | Africa    |  52.7590 |
+| 1997 | Americas  |  72.1460 |
+| 1997 | Asia      |  70.2650 |
+| 1997 | Europe    |  76.1160 |
+| 1997 | Oceania   |  78.1900 |
+| 2002 | Africa    |  51.2355 |
+| 2002 | Americas  |  72.0470 |
+| 2002 | Asia      |  71.0280 |
+| 2002 | Europe    |  77.5365 |
+| 2002 | Oceania   |  79.7400 |
+| 2007 | Africa    |  52.9265 |
+| 2007 | Americas  |  72.8990 |
+| 2007 | Asia      |  72.3960 |
+| 2007 | Europe    |  78.6085 |
+| 2007 | Oceania   |  80.7195 |
 
 ``` r
-spread(k,key="continent",value="year")
+ggplot(k,aes(continent,medianLE))+
+  geom_point()
+```
+
+![](homework_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+
+``` r
+n<-spread(k,key="continent",value="year")
+n
 ```
 
     ## # A tibble: 60 x 6
@@ -175,7 +230,23 @@ spread(k,key="continent",value="year")
     ## 10     50.8   1982       NA    NA     NA      NA
     ## # ... with 50 more rows
 
-Output:
+``` r
+ggplot(n,aes(Africa,medianLE))+
+  geom_point()
+```
+
+    ## Warning: Removed 48 rows containing missing values (geom_point).
+
+![](homework_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
+
+``` r
+ggplot(n,aes(Asia,medianLE))+
+  geom_point()
+```
+
+    ## Warning: Removed 48 rows containing missing values (geom_point).
+
+![](homework_files/figure-gfm/unnamed-chunk-2-3.png)<!-- --> Output:
 
 Grouped by continent and year.
 
@@ -183,6 +254,10 @@ Used the summarise() fn to calculate the median lifeExp.
 
 Used spread() fn to spread the data continent wise according to the
 year.
+
+I dont think its easier because we will have to make separate plots for
+each continent versus earlier we had one plot with all the continents
+and their respective medianLF plotted on it.
 
 ## Activity \#4
 
@@ -413,8 +488,9 @@ left_join(pet,animal,by="type")
     ## 2 lily parrot    friendly   NA
     ## 3  jin    cat nonfriendly    9
 
-Output: Join matching rows from `animal` to `pet` by matching “type”
-variable.
+Output:
+
+Join matching rows from `animal` to `pet` by matching “type” variable.
 
 The type column of pet is printed and since parrot does mot have a
 matching value in animal dataframe a NA is printed in the life
@@ -434,8 +510,9 @@ right_join(pet,animal,by="type")
     ## 2 <NA> bird        <NA>    2
     ## 3  jin  cat nonfriendly    9
 
-Output: Join matching rows from `animal` to `pet` by matching “type”
-variable.
+Output:
+
+Join matching rows from `animal` to `pet` by matching “type” variable.
 
 The type column of animal is printed and since bird does mot have a
 matching value in animal dataframe a NA is printed in both name and
@@ -457,8 +534,10 @@ inner_join(pet,animal)
     ## 1  tim  dog    friendly   10
     ## 2  jin  cat nonfriendly    9
 
-Output: Returns all rows from pet where there are matching values in
-animal, and all columns from pet and animal.
+Output:
+
+Returns all rows from pet where there are matching values in animal, and
+all columns from pet and animal.
 
 We lose parrot in the join because, although he appears in pet, but does
 not appear in animal. The join result has all variables from pet plus
@@ -468,7 +547,7 @@ life, from
 semi\_join(pet,animal):
 
 ``` r
-semi_join(pet,animal)
+semi_join(pet,animal) 
 ```
 
     ## Joining, by = "type"
@@ -525,8 +604,9 @@ left_join(animal,pet)
     ## 2 bird    2 <NA>        <NA>
     ## 3  cat    9  jin nonfriendly
 
-Output: Join matching rows from `pet` to `animal` by matching “type”
-variable.
+Output:
+
+Join matching rows from `pet` to `animal` by matching “type” variable.
 
 The type column of animal is printed and since bird does mot have a
 matching value in pet dataframe a NA is printed in the name and nature
@@ -548,8 +628,9 @@ right_join(animal,pet)
     ## 2 parrot   NA lily    friendly
     ## 3    cat    9  jin nonfriendly
 
-Output: Join matching rows from `pet` to `animal` by matching “type”
-variable.
+Output:
+
+Join matching rows from `pet` to `animal` by matching “type” variable.
 
 The type column of pet is printed and since parrot does mot have a
 matching value in animal dataframe a NA is printed in the life
@@ -646,3 +727,100 @@ mutating join.
 We get all variables from pet AND all variables from animal. Any row
 that derives solely from one table or the other carries NAs in the
 variables found only in the other table.
+
+``` r
+animal2<-data.frame(
+    type=c("tiger","bird","lion"),
+    life=c(10,5,9)
+    )
+```
+
+left\_joint(pet,animal2):
+
+``` r
+left_join(pet,animal2)
+```
+
+    ## Joining, by = "type"
+
+    ## Warning: Column `type` joining factors with different levels, coercing to
+    ## character vector
+
+    ##   name   type      nature life
+    ## 1  tim    dog    friendly   NA
+    ## 2 lily parrot    friendly   NA
+    ## 3  jin    cat nonfriendly   NA
+
+Output:
+
+Joins matching rows from animal2 to pet.
+
+Since the type column values dont match and the life times of a dog,
+parrot and cat are not defined in the type column of animal2 thats why
+after joining the two datasets the joined life column gives
+    NAs.
+
+inner\_join(pet,animal2):
+
+``` r
+inner_join(pet,animal2)
+```
+
+    ## Joining, by = "type"
+
+    ## Warning: Column `type` joining factors with different levels, coercing to
+    ## character vector
+
+    ## [1] name   type   nature life  
+    ## <0 rows> (or 0-length row.names)
+
+Output:
+
+Joins data. Retains only rows common in both sets. Since there are no
+common rows so it returns 0 rows in the
+    result.
+
+anti\_join():
+
+``` r
+anti_join(pet,animal2)
+```
+
+    ## Joining, by = "type"
+
+    ## Warning: Column `type` joining factors with different levels, coercing to
+    ## character vector
+
+    ##   name   type      nature
+    ## 1  tim    dog    friendly
+    ## 2 lily parrot    friendly
+    ## 3  jin    cat nonfriendly
+
+Output:
+
+Returns all rows in pet that do not have a match in
+    animal.
+
+full\_join(pet,animal2):
+
+``` r
+full_join(pet,animal2)
+```
+
+    ## Joining, by = "type"
+
+    ## Warning: Column `type` joining factors with different levels, coercing to
+    ## character vector
+
+    ##   name   type      nature life
+    ## 1  tim    dog    friendly   NA
+    ## 2 lily parrot    friendly   NA
+    ## 3  jin    cat nonfriendly   NA
+    ## 4 <NA>  tiger        <NA>   10
+    ## 5 <NA>   bird        <NA>    5
+    ## 6 <NA>   lion        <NA>    9
+
+Output:
+
+Joins the data from both the dataframes.Retains all values,all rows from
+both.
