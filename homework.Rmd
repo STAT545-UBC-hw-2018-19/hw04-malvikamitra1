@@ -1,0 +1,133 @@
+---
+title: "HW4"
+author: "Malvika Mitra" 
+date: "8th Oct 2018" 
+output:
+  github_document:
+    toc: yes 
+---
+
+```{r load libraries}
+suppressPackageStartupMessages(library(tidyverse)) # to supress messages after library calls
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(gapminder))
+library(knitr)
+```
+
+# DATA RESHAPING:
+
+Data Reshaping is about changing the way data is organized into rows and columns. Most of the time data processing is done by taking the input data as a data frame. It is easy to extract data from the rows and columns of a data frame but there are situations when we need the data frame in a format that is different from format in which we received it. Functions like gather() and spread() from **tidyr** reshape the rows to columns in a data frame.
+
+## Activity #2
+
+Make a tibble with one row per year and columns for life expectancy for two or more countries.
+
+Use knitr::kable() to make this table look pretty in your rendered homework.
+
+Take advantage of this new data shape to scatterplot life expectancy for one country against that of another.
+
+```{r}
+my_gap<-gapminder %>% #making a new dataframe and saving it                         in the variable my_gap.
+  group_by(year) %>% 
+  filter((country=="Canada"| country=="Algeria")) 
+my_gap
+
+g<-tibble(year=my_gap$year,lf=my_gap$lifeExp,country=my_gap$country)  #making a tibble
+knitr::kable(g)
+
+gapminder %>% 
+  filter((country=="Canada"| country=="Algeria")) %>% 
+ggplot(aes(year,lifeExp))+
+  geom_point(aes(color=country))+
+  ggtitle("      ScatterPlot of LifeExp")+
+  xlab("Year")+
+  ylab("LifeExp")
+
+```
+Output: Filtered the Gapminder data according to requirements and saved it my_gap variable.
+
+Then made a tibble out of the columns of my_gap.
+
+Knitted the table and finally made the scatter plot of the lifeExp of Canada ana Algeria over the years.
+
+The graph shows that the lifeExp of Canada is higher than that of Algeria.
+
+## Activity #3
+
+Compute some measure of life expectancy (mean? median? min? max?) for all possible combinations of continent and year. Reshape that to have one row per year and one variable for each continent. Or the other way around: one row per continent and one variable per year.
+
+Use knitr::kable() to make these tables look pretty in your rendered homework.
+
+Is there a plot that is easier to make with the data in this shape versis the usual form? If so (or you think so), try it! Reflect.
+
+```{r}
+k<-gapminder %>% 
+   group_by(year,continent) %>% 
+  summarise(medianLE=median(lifeExp))
+ 
+k
+spread(k,key="continent",value="year")
+```
+Output:
+Grouped by continent and year.
+Used the summarise() fn to calculate the median lifeExp.
+Used spread() fn to spread the data continent wise according to the year.
+
+## Activity #4
+
+In Window functions, we formed a tibble with 24 rows: 2 per year, giving the country with both the lowest and highest life expectancy (in Asia). Take that table (or a similar one for all continents) and reshape it so you have one row per year or per year * continent combination.
+
+```{r}
+a<-my_gap %>%
+  filter(continent == "Asia") %>%
+  select(year, country, lifeExp) %>%
+  group_by(year) %>%
+  filter(min_rank(desc(lifeExp)) < 2 | min_rank(lifeExp) < 2) %>% 
+  arrange(year) %>%
+  print(n = Inf)
+
+
+my_gap
+spread(a,country,year)
+  
+
+```
+
+# Join Prompts
+
+Join Prompts are used to combine datasets in R, using various functions like left_join,right_join,inner_join,full_join etc. 
+
+## Activity #1
+
+Create a second data frame, complementary to Gapminder. Join this with (part of) Gapminder using a dplyr join function and make some observations about the process and result. Explore the different types of joins. Examples of a second data frame you could build:
+ One row per country, a country variable and one or more variables with extra info, such as language spoken, NATO membership, national animal, or capitol city.
+ One row per continent, a continent variable and one or more variables with extra info, such as northern versus southern hemisphere.
+
+```{r}
+gap<-gapminder[1:5,] %>% 
+  select(country,year,lifeExp)
+gap
+cont<-data.frame(
+  year=c(1952,1957,1962,1967,1972),
+  gdp=c(779.4453,820.8530,853.1007,836.1971,739.9811)
+)
+cont
+
+left_join(gap,cont)
+
+inner_join(gap,cont)
+
+semi_join(gap,cont)
+
+full_join(gap,cont)
+```
+Output:
+left_join: Returns all rows of gap, and all columns of gap and              cont.
+
+inner_join:Return all rows of gap where there are matching values in cont, and all columns of gap and cont.
+
+semi_join: Returns all rows of gap where there are matching values in cont, keeping just columns from gap. A semi join differs from an inner join because an inner join will return one row of gap for each matching row of cont, where as a semi join will never duplicate rows of gap. 
+
+
+full_join: Returns all rows and all columns from both gap and cont. 
+
