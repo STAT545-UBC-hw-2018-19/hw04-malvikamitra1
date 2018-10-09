@@ -69,8 +69,11 @@ k
 spread(k,key="continent",value="year")
 ```
 Output:
+
 Grouped by continent and year.
+
 Used the summarise() fn to calculate the median lifeExp.
+
 Used spread() fn to spread the data continent wise according to the year.
 
 ## Activity #4
@@ -131,3 +134,144 @@ semi_join: Returns all rows of gap where there are matching values in cont, keep
 
 full_join: Returns all rows and all columns from both gap and cont. 
 
+## Activity #2
+
+Create your own cheatsheet patterned after Jenny’s but focused on something you care about more than comics! Inspirational examples:
+
+Pets I have owned + breed + friendly vs. unfriendly + ??. Join to a table of pet breed, including variables for furry vs not furry, mammal true or false, etc.
+Movies and studios….
+Athletes and teams….
+
+You will likely need to iterate between your data prep and your joining to make your explorations comprehensive and interesting. For example, you will want a specific amount (or lack) of overlap between the two data.frames, in order to demonstrate all the different joins. You will want both the data frames to be as small as possible, while still retaining the expository value.
+
+```{r}
+pet<- data.frame(
+  name=c("tim","lily","jin"),
+  type=c("dog","parrot","cat"),
+  nature=c("friendly","friendly","nonfriendly")
+)
+  animal<-data.frame(
+    type=c("dog","bird","cat"),
+    life=c(10,2,9)
+    )
+  
+pet
+animal
+```
+Ctreated two dataframes pet and animal and will now explore various joins on them.
+
+left_join(pet,animal):
+
+```{r}
+left_join(pet,animal,by="type")
+```
+Output:
+
+Join matching rows from `animal` to `pet` by matching "type" variable.
+
+The type column of pet is printed and since parrot does mot have a matching value in animal dataframe a NA is printed in the life column.
+
+right_join(pet,animal):
+
+```{r}
+right_join(pet,animal,by="type")
+```
+Output:
+
+Join matching rows from `animal` to `pet` by matching "type" variable.
+
+The type column of animal is printed and since bird does mot have a matching value in animal dataframe a NA is printed in both name and nature columns.
+
+inner_join(pet,animal):
+
+```{r}
+inner_join(pet,animal)
+```
+Output:
+
+Returns all rows from pet where there are matching values in animal, and all columns from pet and animal.
+
+We lose parrot in the join because, although he appears in  pet, but does not appear in animal. The join result has all variables from pet plus life, from animal.
+
+semi_join(pet,animal):
+
+```{r}
+semi_join(pet,animal)
+```
+Output:
+
+Returns all rows from pet where there are matching values in animal, keeping just columns from pet. 
+A semi join differs from an inner join because an inner join will return one row of pet for each matching row of animal, whereas a semi join will never duplicate rows of pet. This is a filtering join.
+
+anti_join(pet,animal):
+
+```{r}
+anti_join(pet,animal)
+```
+Output:
+
+Return all rows from pet where there are not matching values in animal, keeping just columns from pet. This is a filtering join.
+
+left_join(animal,pet):
+
+```{r}
+left_join(animal,pet)
+```
+Output:
+
+Join matching rows from `pet` to `animal` by matching "type" variable.
+
+The type column of animal is printed and since bird does mot have a matching value in pet dataframe a NA is printed in the name and nature columns.
+
+right_join(animal,pet):
+
+```{r}
+right_join(animal,pet)
+```
+Output:
+
+Join matching rows from `pet` to `animal` by matching "type" variable.
+
+The type column of pet is printed and since parrot does mot have a matching value in animal dataframe a NA is printed in the life column.
+
+
+inner_join(animal,pet):
+
+```{r}
+inner_join(animal,pet)
+```
+
+Output:
+Returns all rows from animal where there are matching values in pet, and all columns from pet and animal.
+
+We lose bird in the join because, although he appears in animal, but does not appear in pet. The join result has life from animal plus name, nature from pet.
+
+semi_join(animal,pet):
+
+```{r}
+semi_join(animal,pet)
+```
+Output:
+
+Returns all rows from animal where there are matching values in pet, keeping just columns from animal. 
+A semi join differs from an inner join because an inner join will return one row of animal for each matching row of pet, whereas a semi join will never duplicate rows of animal. This is a filtering join.
+
+anti_join(animal,pet):
+
+```{r}
+anti_join(animal,pet)
+```
+Output:
+
+Return all rows from animal that have no matching values in pet, keeping just columns from animal. This is a filtering join.
+
+full_join(pet,animal):
+
+```{r}
+full_join(pet,animal)
+```
+Output:
+ Return all rows and all columns from both pet and animal. Where there are not matching values, returns NA for the one missing. This is a mutating join.
+ 
+We get all variables from pet AND all variables from animal. Any row that derives solely from one table or the other carries NAs in the variables found only in the other table.
+ 
