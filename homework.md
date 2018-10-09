@@ -307,6 +307,10 @@ spread(a,country,year)
 
     ## # A tibble: 0 x 1
     ## # ... with 1 variable: lifeExp <dbl>
+    
+ Output:
+ 
+ Reshaped the data.
 
 ## Activity \#5
 
